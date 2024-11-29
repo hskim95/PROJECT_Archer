@@ -14,7 +14,7 @@ namespace Archer
             //CharacterDataDTO sampleData = new CharacterDataDTO()
             //{
             //    HP = 100,
-            //    SP = 10,
+            //    SP = 100,
 
             //    walkSpeed = 1f,
             //    runSpeed = 1.5f,
@@ -26,7 +26,7 @@ namespace Archer
             //string toJson = JsonUtility.ToJson(sampleData, true);
             //FileManager.WriteFileFromString("Assets/#PROJECT Archer/Resources/sampleData.json", toJson);
 
-            // LoadPlayerCharacterStatData();
+            LoadPlayerCharacterStatData();
         }
 
         public void LoadPlayerCharacterStatData()

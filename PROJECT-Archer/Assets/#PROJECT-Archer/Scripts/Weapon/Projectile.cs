@@ -6,8 +6,8 @@ namespace Archer
 {
     public class Projectile : MonoBehaviour
     {
-        public float lifeTime; // 총알이 활성화 된 이후 살아있는 시간[제한 시간]
-        public float speed;
+        public float lifeTime; // 발사체가 활성화 된 이후 살아있는 시간 [제한 시간]
+        public float speed; // 발사 속도
         Rigidbody rigid;
 
         private void Start()

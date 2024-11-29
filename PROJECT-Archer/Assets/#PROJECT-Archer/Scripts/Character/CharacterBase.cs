@@ -23,11 +23,11 @@ namespace Archer
         public bool IsNPC { get; set; } = false;
 
         public bool IsEquipDone => isEquipDone;
+        [SerializeField] private bool isEquipDone = false;
         
         private bool isShooting = false;
         private bool isReloading = false;
         private bool isGrounded = false;
-        [SerializeField] private bool isEquipDone = false;
 
         public Vector3 AimingPoint
         {
@@ -249,7 +249,7 @@ namespace Archer
             characterAnimator.SetTrigger("Reload Trigger");
 
             // Reload 사운드 출력
-            SoundManager.Singleton.PlaySFX(SFXFileName.GunReload, currentWeapon.transform.position);
+            //SoundManager.Singleton.PlaySFX(SFXFileName.GunReload, currentWeapon.transform.position);
         }
 
         public void ReloadComplete()

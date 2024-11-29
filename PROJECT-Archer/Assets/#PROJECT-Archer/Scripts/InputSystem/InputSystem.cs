@@ -16,7 +16,7 @@ namespace Archer
 
         public System.Action OnClickSpace;
         public System.Action OnClickLeftMouseButtonDown;
-        public System.Action OnClickLeftMouseButtonUp;
+
         public System.Action OnClickRightMouseButtonDown;
         public System.Action OnClickRightMouseButtonUp;
 
@@ -40,11 +40,6 @@ namespace Archer
             if (Input.GetMouseButtonDown(0))
             {
                 OnClickLeftMouseButtonDown?.Invoke();
-            }
-
-            if (Input.GetMouseButtonUp(0))
-            {
-                OnClickLeftMouseButtonUp?.Invoke();
             }
 
             if (Input.GetMouseButtonDown(1))

@@ -32,6 +32,9 @@ namespace Archer
         
         public void SetInteractableObjects(IInteractable[] interactions)
         {
+            if (interactions == null)
+                return;
+
             ClearList();
             for (int i = 0; i < interactions.Length; i++)
             {

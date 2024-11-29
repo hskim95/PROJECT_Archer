@@ -4,25 +4,37 @@ namespace Archer
 {
     public class CrossHairUI : UIBase
     {
-        [SerializeField] CharacterBase character;
+        public static CrossHairUI Instance => UIManager.Singleton.GetUI<CrossHairUI>(UIList.CrossHairUI);
+
+        public bool IsDrawCrosshair { set => crossHair.SetActive(value); }
+
         [SerializeField] GameObject crossHair;
+        UnityEngine.UI.Image[] images;
+
         public GameObject CrossHair => crossHair;
         Vector3 zoomedScale = Vector3.one * 3f;
 
 
         public void Awake()
         {
-            character = FindAnyObjectByType<CharacterBase>();
-            crossHair = crossHair != null ? crossHair : transform.GetChild(0).gameObject;
+            if (crossHair == null)
+            {
+                crossHair = transform.GetChild(0).gameObject;
+            }
+            images = crossHair.GetComponentsInChildren<UnityEngine.UI.Image>();
         }
 
         public void Update()
         {
-            if (crossHair.activeSelf != character.IsEquipDone)
+            crossHair.transform.localScale = (CameraSystem.Instance.IsZoom ? zoomedScale : Vector3.one) + 0.2f * Mathf.Cos(Time.time * 5f) * Vector3.one;
+        }
+
+        public void SetCrosshairColor(Color color)
+        {
+            for (int i = 0; i < images.Length; i++)
             {
-                crossHair.SetActive(character.IsEquipDone);
+                images[i].color = color;
             }
-            crossHair.transform.localScale = (CameraSystem.Singleton.IsZoom ? zoomedScale : Vector3.one) + 0.2f * Mathf.Cos(Time.time * 5f) * Vector3.one;
         }
     }
 }

@@ -1,0 +1,8 @@
+﻿{
+    "HP": 100.0,
+    "SP": 100.0,
+    "walkSpeed": 1.0,
+    "runSpeed": 1.5,
+    "RunSteminaCost": 1.0,
+    "SteminaRecoverySpeed": 0.5
+}

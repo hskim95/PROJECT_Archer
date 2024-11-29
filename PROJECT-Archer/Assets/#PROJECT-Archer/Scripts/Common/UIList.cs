@@ -6,9 +6,7 @@ namespace Archer
         PANEL_START,
 
         LoadingUI,
-
         TitleUI,
-
         InteractionUI,
         IngameUI,
         CrossHairUI,

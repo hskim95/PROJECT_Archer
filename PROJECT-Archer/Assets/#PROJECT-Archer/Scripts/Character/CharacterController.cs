@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Build;
 using UnityEngine;
 
 namespace Archer
@@ -9,54 +8,47 @@ namespace Archer
     public class CharacterController : MonoBehaviour
     {
         public LayerMask interactionLayer;
-        private CharacterBase character;
+        private Archer archerCharacter;
 
         private IInteractable[] interactableObjects;
 
         private void Awake()
         {
-            TryGetComponent(out character);
+            TryGetComponent(out archerCharacter);
         }
 
         private void Start()
         {
             InputSystem.Singleton.OnClickSpace += CommandJump;
-            //InputSystem.Singleton.OnClickLeftMouseButtonDown += CommandAttack;
-            InputSystem.Singleton.OnClickLeftMouseButtonDown += CommandRapidfireStart;
-            InputSystem.Singleton.OnClickLeftMouseButtonUp += CommandRapidfireStop;
-            InputSystem.Singleton.OnClickRightMouseButtonDown += CommandAimfireStart;
-            InputSystem.Singleton.OnClickRightMouseButtonUp += CommandAimfireStop;
+            InputSystem.Singleton.OnClickLeftMouseButtonDown += CommandShoot;
+            InputSystem.Singleton.OnClickRightMouseButtonDown += CommandAimStart;
+            InputSystem.Singleton.OnClickRightMouseButtonUp += CommandAimStop;
 
             InputSystem.Singleton.OnClickInteract += CommandInteract;
             InputSystem.Singleton.OnMouseScrollWheel += CommandMouseScrollWheel;
 
             if (CompareTag("Player"))
             {
-                IngameUI.Instance.SetHP(character.CurrentHP, character.maxStat.CharacterData.HP);
-                IngameUI.Instance.SetSP(character.CurrentSP, character.maxStat.CharacterData.SP);
+                IngameUI.Instance.SetHP(archerCharacter.CurrentHP, archerCharacter.maxStat.CharacterData.HP);
+                IngameUI.Instance.SetSP(archerCharacter.CurrentSP, archerCharacter.maxStat.CharacterData.SP);
             }
 
-            CameraSystem.Singleton.SetCameraFollowTarget(character.cameraPivot);
+            CameraSystem.Instance.SetCameraFollowTarget(archerCharacter.cameraPivot);
         }
 
-        private void CommandRapidfireStart()
+        private void CommandShoot()
         {
-            character.Shoot(true);
+            archerCharacter.Shoot();
         }
 
-        private void CommandRapidfireStop()
+        private void CommandAimStart()
         {
-            character.Shoot(false);
+            archerCharacter.IsAimed = true;
         }
 
-        private void CommandAimfireStart()
+        private void CommandAimStop()
         {
-            character.Shoot(true);
-        }
-
-        private void CommandAimfireStop()
-        {
-            character.Shoot(false);
+            archerCharacter.IsAimed = false;
         }
 
         public void CommandMouseScrollWheel(float delta)
@@ -84,7 +76,7 @@ namespace Archer
 
         public void CheckOverlapInteractionObject()
         {
-            Collider[] overlappedObjects = Physics.OverlapSphere(character.transform.position, 2f, interactionLayer, QueryTriggerInteraction.Collide);
+            Collider[] overlappedObjects = Physics.OverlapSphere(archerCharacter.transform.position, 2f, interactionLayer, QueryTriggerInteraction.Collide);
 
             List<IInteractable> interactables = new List<IInteractable>();
             for (int i = 0; i < overlappedObjects.Length; i++)
@@ -102,28 +94,30 @@ namespace Archer
 
         private void Update()
         {
-            if (character.IsAlive)
+            if (archerCharacter.IsAlive)
             {
                 CheckOverlapInteractionObject();
 
-                if (character.IsArmed)
+                if (archerCharacter.IsArmed)
                 {
-                    character.Rotate(InputSystem.Singleton.Look.x);
-                    character.AimingPoint = CameraSystem.Singleton.AimingPoint;
+                    archerCharacter.Rotate(InputSystem.Singleton.Look.x);
+                    archerCharacter.AimingPoint = CameraSystem.Instance.AimingPoint;
                 }
 
-                character.Move(InputSystem.Singleton.Movement, character.IsArmed ? Camera.main.transform.eulerAngles.y : character.transform.rotation.y);
+                archerCharacter.Move(InputSystem.Singleton.Movement, archerCharacter.IsArmed ? Camera.main.transform.eulerAngles.y : archerCharacter.transform.rotation.y);
 
-                //character.SetRunning(InputSystem.Instance.IsLeftShift); -> 예전 코드
-                character.IsRun = InputSystem.Singleton.IsLeftShift;
+                archerCharacter.IsRun = InputSystem.Singleton.IsLeftShift;
 
                 if (Input.GetKeyDown(KeyCode.Alpha1))
                 {
-                    character.SetArmed(!character.IsArmed);
-                    if (character.IsArmed)
+                    archerCharacter.SetArmed(!archerCharacter.IsArmed);
+                    CrossHairUI crosshairUI = UIManager.Singleton.GetUI<CrossHairUI>(UIList.CrossHairUI);
+                    crosshairUI.IsDrawCrosshair = archerCharacter.IsArmed;
+
+                    if (archerCharacter.IsArmed)
                     {
-                        float differAngle = Camera.main.transform.eulerAngles.y - character.transform.eulerAngles.y;
-                        character.Rotate(differAngle);
+                        float differAngle = Camera.main.transform.eulerAngles.y - archerCharacter.transform.eulerAngles.y;
+                        archerCharacter.Rotate(differAngle);
                     }
                 }
 
@@ -132,8 +126,8 @@ namespace Archer
             if (CompareTag("Player"))
             {
                 var ingameUI = UIManager.Singleton.GetUI<IngameUI>(UIList.IngameUI);
-                ingameUI.SetHP(character.CurrentHP, character.maxStat.CharacterData.HP);
-                ingameUI.SetSP(character.CurrentSP, character.maxStat.CharacterData.SP);
+                ingameUI.SetHP(archerCharacter.CurrentHP, archerCharacter.maxStat.CharacterData.HP);
+                ingameUI.SetSP(archerCharacter.CurrentSP, archerCharacter.maxStat.CharacterData.SP);
             }
         }
 
