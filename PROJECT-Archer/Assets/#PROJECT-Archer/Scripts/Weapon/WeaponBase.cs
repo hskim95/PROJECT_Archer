@@ -28,19 +28,22 @@ namespace Archer
 
         public const float spread = 5f;
 
-        private void Awake()
+        protected virtual void Awake()
         {
             currentAmmo = clipSize;
             fireRate = Mathf.Max(fireRate, 0.1f); // 최소 연사 속도(시간 값)는 0.1
             TryGetComponent(out impulseSource);
         }
 
-        public bool Fire()
+        public virtual bool Fire()
         {
             if (currentAmmo <= 0 || Time.time - lastFireTime < fireRate)
             {
                 return false;
             }
+
+            Projectile newArrow = Instantiate(arrowPrefab, firePoint.position, firePoint.rotation);
+            newArrow.gameObject.SetActive(true);
 
             lastFireTime = Time.time;
             currentAmmo--;
@@ -61,6 +64,6 @@ namespace Archer
 
             return true;
         }
-        public void Reload() => currentAmmo = clipSize;
+        public virtual void Reload() => currentAmmo = clipSize;
     }
 }

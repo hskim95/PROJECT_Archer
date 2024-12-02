@@ -34,12 +34,6 @@ namespace Archer
 
         public void Update()
         {
-            //// 마우스 오른쪽 버튼이 다운 시, 한 번 실행
-            //if (Input.GetMouseButtonDown(1))
-            //{
-            //    isZoom = !isZoom; // 줌 모드 전환
-            //}
-
             float targetFOV = isZoom ? 20f : 60f; // 목표 화각을 isZoom에 따라 선택
             if (Mathf.Abs(targetFOV - tpsCamera.m_Lens.FieldOfView) > 0.1f)
             {

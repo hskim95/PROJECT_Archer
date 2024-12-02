@@ -73,12 +73,14 @@ namespace Archer
             IsArmed = isArmed;
             if (IsArmed)
             {
-                characterAnimator.SetTrigger("Equip Trigger");
+                // To do : 활 장착 애니메이션 주워오기
+                // characterAnimator.SetTrigger("Equip Trigger");
             }
             else
             {
                 isEquipDone = false;
-                characterAnimator.SetTrigger("Holster Trigger");
+                // To do : 활 반환 애니메이션 주워오기
+                // characterAnimator.SetTrigger("Holster Trigger");
             }
         }
 
@@ -88,16 +90,16 @@ namespace Archer
             if (isEquip)
             {
                 weaponTransform.SetParent(weaponHolder.transform);
-                weaponTransform.SetLocalPositionAndRotation(new Vector3(-0.08f, 0, 0), Quaternion.Euler(0, -90f, 0));
+                weaponTransform.SetLocalPositionAndRotation(new Vector3(-0.1f, -0.03f, 0), Quaternion.Euler(90f, 0, 0));
             }
             else
             {
                 weaponTransform.SetParent(returnTransform);
-                weaponTransform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+                weaponTransform.SetLocalPositionAndRotation(new Vector3(0, 0.15f, 0), Quaternion.Euler(0, 0, -90f));
             }
         }
 
-        private void Awake()
+        protected virtual void Awake()
         {
             TryGetComponent(out characterAnimator);
             TryGetComponent(out unityCharacterController);
@@ -137,7 +139,7 @@ namespace Archer
             characterAnimator.enabled = !isActive;
         }
 
-        private void Update()
+        protected virtual void Update()
         {
             if (IsAlive)
             {
@@ -151,16 +153,16 @@ namespace Archer
                         if (currentWeapon.RemainAmmo <= 0 && !isReloading)
                         {
                             Reload();
-                            SoundManager.Singleton.PlaySFX(SFXFileName.GunEmpty, currentWeapon.transform.position);
+                            // To do: 사운드 파일 구해다가 넣기
+                            // SoundManager.Singleton.PlaySFX(SFXFileName.GunEmpty, currentWeapon.transform.position);
                         }
                     }
                 }
 
-                armed = Mathf.Lerp(armed, IsArmed ? 1f : 0f, Time.deltaTime * 10f);
                 runningBlend = Mathf.Lerp(runningBlend, IsRun ? 1f : 0f, Time.deltaTime * 10f);
 
                 characterAnimator.SetFloat("Speed", speed);
-                characterAnimator.SetFloat("Armed", armed);
+                characterAnimator.SetBool("Armed", IsArmed);
                 characterAnimator.SetFloat("Horizontal", horizontal);
                 characterAnimator.SetFloat("Vertical", vertical);
                 characterAnimator.SetFloat("RunningBlend", runningBlend);

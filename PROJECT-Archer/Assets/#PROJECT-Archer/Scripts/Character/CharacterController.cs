@@ -38,16 +38,19 @@ namespace Archer
 
         private void CommandShoot()
         {
+            if (!archerCharacter.IsArmed) return;
             archerCharacter.Shoot();
         }
 
         private void CommandAimStart()
         {
+            if (!archerCharacter.IsArmed) return;
             archerCharacter.IsAimed = true;
         }
 
         private void CommandAimStop()
         {
+            if (!archerCharacter.IsArmed) return;
             archerCharacter.IsAimed = false;
         }
 
@@ -110,15 +113,18 @@ namespace Archer
 
                 if (Input.GetKeyDown(KeyCode.Alpha1))
                 {
+                    archerCharacter.characterAnimator.SetTrigger("WeaponShift");
                     archerCharacter.SetArmed(!archerCharacter.IsArmed);
                     CrossHairUI crosshairUI = UIManager.Singleton.GetUI<CrossHairUI>(UIList.CrossHairUI);
                     crosshairUI.IsDrawCrosshair = archerCharacter.IsArmed;
 
+                    /*
                     if (archerCharacter.IsArmed)
                     {
                         float differAngle = Camera.main.transform.eulerAngles.y - archerCharacter.transform.eulerAngles.y;
                         archerCharacter.Rotate(differAngle);
                     }
+                    */
                 }
 
             }
